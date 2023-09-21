@@ -53,13 +53,13 @@ fn main() {
         .define("BUILD_STATIC_LIB", "ON");
 
     #[cfg(target_os = "macos")]
-    let dst =
-        dst
-            .define("CMAKE_C_COMPILER", "/opt/homebrew/opt/llvm/bin/clang")
-            .define("CMAKE_CXX_COMPILER", "/opt/homebrew/opt/llvm/bin/clang++")
-            .define("OPENMP_LIBRARIES", "/opt/homebrew/opt/llvm/lib")
-            .define("OPENMP_INCLUDES", "/opt/homebrew/opt/llvm/include");
+    let dst = dst
+        .define("CMAKE_C_COMPILER", "/opt/homebrew/opt/llvm/bin/clang")
+        .define("CMAKE_CXX_COMPILER", "/opt/homebrew/opt/llvm/bin/clang++")
+        .define("OPENMP_LIBRARIES", "/opt/homebrew/opt/llvm/lib")
+        .define("OPENMP_INCLUDES", "/opt/homebrew/opt/llvm/include");
 
+    let dst = dst.define("EIGEN_MPL2_ONLY", "1");
     let dst = dst.build();
 
     // bindgen build
@@ -76,9 +76,7 @@ fn main() {
     #[cfg(feature = "cuda")]
     let bindings = bindings.clang_arg("-I/usr/local/cuda/include");
 
-    let bindings = bindings
-        .generate()
-        .expect("Unable to generate bindings");
+    let bindings = bindings.generate().expect("Unable to generate bindings");
 
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
     bindings
